@@ -53,12 +53,13 @@ class LinkedList {
   /** pop(): return & remove last item. */
 
   pop() {
+    return this.removeAt(this.length - 1);
   }
 
   /** shift(): return & remove first item. */
 
   shift() {
-
+    return this.removeAt(0);
   }
 
   /** getAt(idx): get val at idx. */
@@ -67,7 +68,7 @@ class LinkedList {
     let currentNode = this.head; let ct = 0;
 
     while (currentNode !== null && ct != idx) {
-      ct += 1; currentNode = currentNode.next;
+      ct++; currentNode = currentNode.next;
     }
     return currentNode;
   }
@@ -75,13 +76,32 @@ class LinkedList {
   /** setAt(idx, val): set val at idx to val */
 
   setAt(idx, val) {
-
+    this.getAt(idx).val = val;
   }
 
   /** insertAt(idx, val): add node w/val before idx. */
 
   insertAt(idx, val) {
-
+    for (let x = 0; x <= this.length; x++) {
+      if (x === idx) {
+        let newNode = new Node(val);
+        if (this.getAt(x + 1) && this.getAt(x - 1)) {
+          this.getAt(x - 1).next = newNode;
+          newNode.next = this.getAt(x + 1);
+          return
+        } else if (this.getAt(x + 1)) {
+          this.unshift(val);
+          return
+        } else if (this.getAt(x - 1)) {
+          this.push(val);
+          return
+        } else {
+          this.push(val);
+          return
+        }
+      }
+    }
+    throw new Error("Invalid Index.");
   }
 
   /** removeAt(idx): return & remove item at idx, */
@@ -97,22 +117,26 @@ class LinkedList {
         } else if (this.getAt(x - 1)) {
           this.getAt(x - 1).next = null
           this.tail = this.getAt(x - 1)
+        } else {
+          this.head = null;
+          this.tail = null;
         }
         this.length--;
         return returnThis;
       }
     }
-    throw new Error("Invalid Index.")
+    throw new Error("Invalid Operation.");
   }
 
   /** average(): return an average of all values in the list */
 
   average() {
-
+    let sum = 0;
+    for (let x = 0; x < this.length; x++) {
+      sum += this.getAt(x).val
+    }
+    return sum / this.length;
   }
 }
-
-
-const numbers = new LinkedList()
 
 module.exports = LinkedList;
